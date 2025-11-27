@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weekly Draft</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Weekly Draft — Full</title>
     <style>
         :root {
             --primary: #0070f3;
@@ -18,7 +18,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            max-width: 900px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
@@ -30,11 +30,10 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        h1 { text-align: center; margin-bottom: 2rem; color: #111; }
-        h2 { margin: 0; font-size: 1.5rem; }
-        
-        /* Form Elements */
-        label { display: block; margin-top: 15px; font-weight: 600; font-size: 0.9rem; color: #444; }
+        h1 { text-align: center; margin-bottom: 1.25rem; color: #111; }
+        h2 { margin: 0; font-size: 1.25rem; }
+
+        label { display: block; margin-top: 12px; font-weight: 600; font-size: 0.9rem; color: #444; }
         input[type="text"], input[type="time"], textarea, select, input[type="file"] {
             width: 100%;
             padding: 10px;
@@ -44,91 +43,88 @@
             box-sizing: border-box;
             font-size: 1rem;
         }
-        
-        textarea { resize: vertical; min-height: 80px; font-family: inherit; }
 
-        /* Client Select */
+        textarea { resize: vertical; min-height: 72px; font-family: inherit; }
+
         .client-section {
             background: #eef2f6;
             padding: 20px;
             border-radius: 8px;
             border-left: 5px solid var(--primary);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        /* Day Toggles */
         .toggle-container {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+        }
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
         }
         .toggle-btn {
             background: white;
             border: 1px solid #ccc;
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 20px;
             cursor: pointer;
-            user-select: none;
-            transition: all 0.2s;
+            transition: all 0.15s;
             font-weight: 500;
         }
-        .toggle-btn:hover { background: #f0f0f0; }
-        
-        input[type="checkbox"] { display: none; }
-        input[type="checkbox"]:checked + .toggle-btn {
+        .toggle-checkbox { display: none; }
+        .toggle-checkbox:checked + .toggle-btn {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
 
-        /* Day Content Blocks */
         .day-container {
             display: none;
             border: 1px solid var(--border);
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: 18px;
+            margin-bottom: 18px;
             border-radius: 8px;
             background: #fff;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.25s ease-in-out;
         }
         .day-container.active { display: block; }
-        
-        /* Header inside Day Block */
+
         .day-header {
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 2px solid var(--primary); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary);
             padding-bottom: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        /* Time Grid */
         .time-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
         }
 
-        /* Buttons */
         .submit-btn {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background-color: var(--primary);
             color: white;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: background 0.2s;
-            margin-top: 20px;
+            margin-top: 18px;
         }
         .submit-btn:hover { background-color: var(--primary-hover); }
         .submit-btn:disabled { background-color: #aaa; cursor: not-allowed; }
 
-        /* Copy Button Style */
         .copy-btn {
             background-color: #6c757d;
             color: white;
@@ -141,28 +137,33 @@
         }
         .copy-btn:hover { background-color: #5a6268; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        @media (max-width: 600px) {
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 700px) {
             .time-grid { grid-template-columns: 1fr; }
             .day-header { flex-direction: column; align-items: flex-start; gap: 10px; }
         }
+
+        /* small helper styling */
+        .small-muted { font-size: 0.85rem; color: #666; margin-top: 6px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>Weekly Content Draft</h1>
+
     <form id="contentForm">
 
+        <!-- CLIENT SELECT -->
         <div class="client-section">
-            <label>Select Client:</label>
-            <select name="client" required>
+            <label for="clientSelect">Select Client:</label>
+            <select id="clientSelect" name="client" required>
                 <option value="" disabled selected>-- Choose a Client --</option>
+                <!-- Existing static options kept as fallback; you can auto-populate using populateClientsFromJson -->
                 <option value="Doctor Matt">Doctor Matt</option>
                 <option value="Miranda Peters">Miranda Peters</option>
                 <option value="Monica Ishak">Monica Ishak</option>
-                <option value="Sweet James ">Sweet James </option>
+                <option value="Sweet James">Sweet James</option>
                 <option value="Kero">Kero</option>
                 <option value="Abraham Sebag">Abraham Sebag</option>
                 <option value="Joshua">Joshua</option>
@@ -179,7 +180,6 @@
                 <option value="Dr. Arsany">Dr. Arsany</option>
                 <option value="Darren">Darren</option>
                 <option value="Mina E">Mina E</option>
-                <option value="Frank">Frank</option>
                 <option value="Flying Goat">Flying Goat</option>
                 <option value="Jon Ibranhim">Jon Ibranhim</option>
                 <option value="January Stramaglia">January Stramaglia</option>
@@ -203,142 +203,260 @@
                 <option value="Nikki">Nikki</option>
                 <option value="Jimmy Lai">Jimmy Lai</option>
             </select>
+
+            <div class="small-muted">
+                Tip: n8n can push JSON to this page and call <code>populateClientsFromJson(items)</code> to auto-populate the dropdown.
+            </div>
         </div>
 
+        <!-- DAY TOGGLES -->
         <h3>Select Days to Schedule:</h3>
         <div class="toggle-container">
-            <label><input type="checkbox" onchange="toggleDay('monday')"><span class="toggle-btn">Monday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('tuesday')"><span class="toggle-btn">Tuesday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('wednesday')"><span class="toggle-btn">Wednesday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('thursday')"><span class="toggle-btn">Thursday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('friday')"><span class="toggle-btn">Friday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('saturday')"><span class="toggle-btn">Saturday</span></label>
-            <label><input type="checkbox" onchange="toggleDay('sunday')"><span class="toggle-btn">Sunday</span></label>
+            <!-- Each checkbox has an id like toggle-monday and a class toggle-checkbox -->
+            <label class="toggle-label">
+                <input id="toggle-monday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('monday')" />
+                <span class="toggle-btn">Monday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-tuesday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('tuesday')" />
+                <span class="toggle-btn">Tuesday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-wednesday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('wednesday')" />
+                <span class="toggle-btn">Wednesday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-thursday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('thursday')" />
+                <span class="toggle-btn">Thursday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-friday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('friday')" />
+                <span class="toggle-btn">Friday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-saturday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('saturday')" />
+                <span class="toggle-btn">Saturday</span>
+            </label>
+            <label class="toggle-label">
+                <input id="toggle-sunday" class="toggle-checkbox" type="checkbox" onchange="toggleDay('sunday')" />
+                <span class="toggle-btn">Sunday</span>
+            </label>
         </div>
 
+        <!-- DAYS: each day block now contains 3 captions (IG, YT, TT), times, files -->
+        <!-- Monday -->
         <div id="monday" class="day-container">
             <div class="day-header">
                 <h2>Monday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('monday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('monday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
-            
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="monday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="monday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="monday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="monday_caption" placeholder="Paste caption here..."></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="monday_caption_ig" placeholder="Instagram caption..."></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="monday_caption_yt" placeholder="YouTube caption..."></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="monday_caption_tt" placeholder="TikTok caption..."></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="monday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="monday_reel" accept="video/*">
         </div>
 
+        <!-- Tuesday -->
         <div id="tuesday" class="day-container">
             <div class="day-header">
                 <h2>Tuesday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('tuesday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('tuesday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="tuesday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="tuesday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="tuesday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="tuesday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="tuesday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="tuesday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="tuesday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="tuesday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="tuesday_reel" accept="video/*">
         </div>
 
+        <!-- Wednesday -->
         <div id="wednesday" class="day-container">
             <div class="day-header">
                 <h2>Wednesday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('wednesday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('wednesday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="wednesday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="wednesday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="wednesday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="wednesday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="wednesday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="wednesday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="wednesday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="wednesday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="wednesday_reel" accept="video/*">
         </div>
 
+        <!-- Thursday -->
         <div id="thursday" class="day-container">
             <div class="day-header">
                 <h2>Thursday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('thursday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('thursday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="thursday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="thursday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="thursday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="thursday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="thursday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="thursday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="thursday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="thursday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="thursday_reel" accept="video/*">
         </div>
 
+        <!-- Friday -->
         <div id="friday" class="day-container">
             <div class="day-header">
                 <h2>Friday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('friday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('friday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="friday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="friday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="friday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="friday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="friday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="friday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="friday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="friday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="friday_reel" accept="video/*">
         </div>
 
+        <!-- Saturday -->
         <div id="saturday" class="day-container">
             <div class="day-header">
                 <h2>Saturday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('saturday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('saturday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="saturday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="saturday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="saturday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="saturday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="saturday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="saturday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="saturday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="saturday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="saturday_reel" accept="video/*">
         </div>
 
+        <!-- Sunday -->
         <div id="sunday" class="day-container">
             <div class="day-header">
                 <h2>Sunday Content</h2>
-                <button type="button" class="copy-btn" onclick="copyTimesFrom('sunday')">⚡ Copy time to all days</button>
+                <div>
+                    <button type="button" class="copy-btn" onclick="copyTimesFrom('sunday')">⚡ Copy time to selected days</button>
+                </div>
             </div>
+
             <div class="time-grid">
                 <div><label>IG Time</label><input type="time" name="sunday_ig_time"></div>
                 <div><label>YT Time</label><input type="time" name="sunday_yt_time"></div>
                 <div><label>TikTok Time</label><input type="time" name="sunday_tt_time"></div>
             </div>
-            <label>Caption</label>
-            <textarea name="sunday_caption"></textarea>
+
+            <label>Instagram Caption</label>
+            <textarea name="sunday_caption_ig"></textarea>
+
+            <label>YouTube Caption</label>
+            <textarea name="sunday_caption_yt"></textarea>
+
+            <label>TikTok Caption</label>
+            <textarea name="sunday_caption_tt"></textarea>
+
             <label>Thumbnail</label>
             <input type="file" name="sunday_thumbnail" accept="image/*">
+
             <label>Reel Video</label>
             <input type="file" name="sunday_reel" accept="video/*">
         </div>
@@ -348,156 +466,227 @@
 </div>
 
 <script>
-    // ==========================================
-    // 1. CONFIGURATION: Cloudinary & n8n
-    // ==========================================
-    const CLOUD_NAME = 'doarv7ntl'; 
-    const UPLOAD_PRESET = 'socialvert'; 
-    const WEBHOOK_URL = 'https://n8n.srv945853.hstgr.cloud/webhook/weekly-pdf';
-    // ==========================================
+/* =========================
+   CONFIG
+   ========================= */
+const CLOUD_NAME = 'doarv7ntl';        // replace if needed
+const UPLOAD_PRESET = 'socialvert';    // replace if needed
+const WEBHOOK_URL = 'https://n8n.srv945853.hstgr.cloud/webhook/weekly-pdf'; // replace with your webhook
 
-    // 2. Toggle Visibility of Days
-    function toggleDay(dayId) {
-        const el = document.getElementById(dayId);
-        if (el.classList.contains('active')) {
-            el.classList.remove('active');
-        } else {
-            el.classList.add('active');
-        }
+/* =========================
+   UTIL: populate client select from JSON (dedupe + trim)
+   Usage: populateClientsFromJson([{property_client_name:"Doctor Matt"}, {...}])
+   Or if n8n injects a JS variable `window.n8nClientList`, call populateClientsFromJson(window.n8nClientList)
+   ========================= */
+function populateClientsFromJson(items) {
+    if (!Array.isArray(items)) return;
+    const select = document.getElementById('clientSelect');
+    const seen = new Set();
+
+    // preserve existing placeholder and any existing default options
+    // collect existing values (to avoid duplicates)
+    for (const opt of Array.from(select.options)) {
+        const val = (opt.value || '').trim();
+        if (val) seen.add(val);
     }
 
-    // 3. COPY FUNCTION: Copies times ONLY to currently Selected Days
-    function copyTimesFrom(sourceDay) {
-        // Get values from the source day
-        const ig = document.querySelector(`[name="${sourceDay}_ig_time"]`).value;
-        const yt = document.querySelector(`[name="${sourceDay}_yt_time"]`).value;
-        const tt = document.querySelector(`[name="${sourceDay}_tt_time"]`).value;
-
-        if(!ig && !yt && !tt) {
-            alert(`Please set times for ${sourceDay.charAt(0).toUpperCase() + sourceDay.slice(1)} first!`);
-            return;
-        }
-
-        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        let updateCount = 0;
-
-        // Loop through all days
-        days.forEach(day => {
-            if (day !== sourceDay) {
-                // Check if the checkbox for this day is checked
-                const isSelected = document.querySelector(`input[onchange="toggleDay('${day}')"]`).checked;
-                
-                if (isSelected) {
-                    document.querySelector(`[name="${day}_ig_time"]`).value = ig;
-                    document.querySelector(`[name="${day}_yt_time"]`).value = yt;
-                    document.querySelector(`[name="${day}_tt_time"]`).value = tt;
-                    updateCount++;
-                }
-            }
-        });
-
-        if (updateCount > 0) {
-            alert(`Times copied to ${updateCount} selected day(s)!`);
-        } else {
-            alert("No other days are currently selected. Select days using the buttons at the top first.");
-        }
-    }
-
-    // 4. CLOUDINARY UPLOADER
-    async function uploadToCloudinary(file) {
-        const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
-        const formData = new FormData();
-        
-        formData.append('file', file);
-        formData.append('upload_preset', UPLOAD_PRESET);
-
-        const response = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) throw new Error('Cloudinary Upload Failed');
-        const data = await response.json();
-        
-        // Returns the secure direct URL (https://...)
-        return data.secure_url; 
-    }
-
-    // 5. TIME FORMATTER (14:00 -> 2:00PM EST)
-    function formatTime(timeStr) {
-        if (!timeStr) return "TBD";
-        const [h, m] = timeStr.split(':');
-        let hours = parseInt(h);
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const h12 = hours % 12 || 12;
-        return `${h12}:${m}${ampm} EST`;
-    }
-
-    // 6. MAIN SUBMIT LOGIC
-    document.getElementById('contentForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-
-        const formData = new FormData(e.target);
-        const finalPayload = {};
-
-        try {
-            // Loop through all form fields
-            for (const [key, value] of formData.entries()) {
-                
-                // A. Handle File Uploads (Cloudinary)
-                if (value instanceof File && value.size > 0) {
-                    btn.innerText = `Uploading ${key}...`;
-                    console.log(`Uploading ${value.name} to Cloudinary...`);
-                    
-                    try {
-                        const publicUrl = await uploadToCloudinary(value);
-                        finalPayload[key + '_url'] = publicUrl; 
-                    } catch (uploadErr) {
-                        console.error(uploadErr);
-                        alert(`Failed to upload ${value.name}`);
-                        throw uploadErr;
-                    }
-                
-                // B. Handle Time & Text
-                } else if (typeof value === 'string') {
-                    if (key.includes('_time') && value) {
-                        // Save both the pretty format (for PDF) and ISO (for n8n scheduling)
-                        finalPayload[key + '_formatted_time'] = formatTime(value);
-                        finalPayload[key + '_iso_time'] = value;
-                    } else {
-                        finalPayload[key] = value;
-                    }
-                }
-            }
-
-            // C. Send Payload to n8n
-            btn.innerText = "Processing in n8n...";
-            
-            const response = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(finalPayload)
-            });
-
-            if(response.ok) {
-                alert("Success! Workflow started. Check Google Drive shortly.");
-                // location.reload(); // Optional: Reload page to clear form
-            } else {
-                alert("Error communicating with n8n.");
-            }
-
-        } catch (err) {
-            console.error(err);
-            alert("An error occurred: " + err.message);
-        }
-
-        btn.innerText = originalText;
-        btn.disabled = false;
+    items.forEach(it => {
+        // handle both cases: direct strings or objects with property_client_name
+        let name = '';
+        if (typeof it === 'string') name = it;
+        else if (it && (it.property_client_name || it.name)) name = (it.property_client_name || it.name);
+        if (!name) return;
+        name = name.trim();
+        if (!name) return;
+        if (seen.has(name)) return;
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+        seen.add(name);
     });
-</script>
+}
 
+/* Example:
+   // If n8n renders a window variable:
+   if (window.n8nClientList) populateClientsFromJson(window.n8nClientList);
+
+   // Or to test locally:
+   // populateClientsFromJson([{property_client_name:'New Client'}, 'Extra Client']);
+*/
+
+/* =========================
+   TOGGLING DAY VISIBILITY
+   ========================= */
+function toggleDay(dayId) {
+    const el = document.getElementById(dayId);
+    const checkbox = document.getElementById('toggle-' + dayId);
+    if (!el || !checkbox) return;
+    if (checkbox.checked) {
+        el.classList.add('active');
+    } else {
+        el.classList.remove('active');
+    }
+}
+
+/* =========================
+   COPY TIMES: copy from sourceDay to all other selected days
+   - copies the three time inputs (ig, yt, tt)
+   - only copies to days whose toggle checkbox is checked
+   ========================= */
+function copyTimesFrom(sourceDay) {
+    const getVal = (name) => {
+        const el = document.querySelector(`[name="${name}"]`);
+        return el ? el.value : '';
+    };
+
+    const ig = getVal(`${sourceDay}_ig_time`);
+    const yt = getVal(`${sourceDay}_yt_time`);
+    const tt = getVal(`${sourceDay}_tt_time`);
+
+    if (!ig && !yt && !tt) {
+        alert(`Set at least one time on ${capitalize(sourceDay)} before copying.`);
+        return;
+    }
+
+    const days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+    let count = 0;
+
+    for (const day of days) {
+        if (day === sourceDay) continue;
+        const checkbox = document.getElementById('toggle-' + day);
+        if (!checkbox || !checkbox.checked) continue;
+
+        if (ig) { const el = document.querySelector(`[name="${day}_ig_time"]`); if (el) el.value = ig; }
+        if (yt) { const el = document.querySelector(`[name="${day}_yt_time"]`); if (el) el.value = yt; }
+        if (tt) { const el = document.querySelector(`[name="${day}_tt_time"]`); if (el) el.value = tt; }
+        count++;
+    }
+
+    if (count > 0) {
+        alert(`Times copied to ${count} selected day(s).`);
+    } else {
+        alert('No other selected days to copy to. Select days using the toggles above.');
+    }
+}
+
+/* =========================
+   CLOUDINARY UPLOADER
+   ========================= */
+async function uploadToCloudinary(file) {
+    // if file is not provided or empty, return null
+    if (!file || !(file instanceof File) || file.size === 0) return null;
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`;
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', UPLOAD_PRESET);
+
+    const resp = await fetch(url, { method: 'POST', body: fd });
+    if (!resp.ok) {
+        const txt = await resp.text().catch(()=> '');
+        throw new Error(`Cloudinary upload failed: ${resp.status} ${txt}`);
+    }
+    const data = await resp.json();
+    return data.secure_url || data.url || null;
+}
+
+/* =========================
+   TIME FORMATTING
+   - input: "14:30" => "2:30PM EST"
+   - also keep ISO "14:30"
+   ========================= */
+function formatTime(timeStr) {
+    if (!timeStr) return "TBD";
+    const [hStr, m] = timeStr.split(':');
+    if (hStr === undefined) return timeStr;
+    const h = parseInt(hStr, 10);
+    if (Number.isNaN(h)) return timeStr;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = (h % 12) || 12;
+    return `${h12}:${m}${ampm} EST`;
+}
+
+/* small helper */
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* =========================
+   MAIN SUBMIT HANDLER
+   - collects every form field
+   - uploads files to Cloudinary
+   - creates finalPayload with Option A (separate caption fields)
+   ========================= */
+document.getElementById('contentForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerText;
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Processing...';
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const finalPayload = {};
+
+    try {
+        // iterate through form entries
+        // we will handle files specially (upload to Cloudinary) and time formatting
+        for (const [key, value] of formData.entries()) {
+            // Files: value will be a File object or an empty string
+            if (value instanceof File && value.size > 0 && value.name) {
+                submitBtn.innerText = `Uploading ${key}...`;
+                try {
+                    const publicUrl = await uploadToCloudinary(value);
+                    if (publicUrl) finalPayload[key + '_url'] = publicUrl;
+                } catch (err) {
+                    console.error('Upload error', err);
+                    alert(`Failed uploading ${value.name}: ${err.message}`);
+                    throw err;
+                }
+            } else if (typeof value === 'string') {
+                // time fields
+                if (key.includes('_time') && value) {
+                    finalPayload[key + '_formatted_time'] = formatTime(value); // pretty for PDF
+                    finalPayload[key + '_iso_time'] = value; // ISO-like for scheduling
+                } else {
+                    // normal text fields (client, captions, etc.)
+                    finalPayload[key] = value;
+                }
+            }
+        }
+
+        // include which days are selected (optional helpful metadata)
+        const daysSelected = [];
+        ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].forEach(d => {
+            const cb = document.getElementById('toggle-' + d);
+            if (cb && cb.checked) daysSelected.push(d);
+        });
+        finalPayload.days_selected = daysSelected;
+
+        // Post payload to your n8n webhook
+        submitBtn.innerText = 'Sending to n8n...';
+
+        const resp = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(finalPayload),
+        });
+
+        if (resp.ok) {
+            alert('Success — workflow started in n8n.');
+            // optionally reset the form: form.reset();
+        } else {
+            const txt = await resp.text().catch(()=> '');
+            console.error('n8n response error', resp.status, txt);
+            alert('Error sending to n8n: ' + resp.status + ' — see console.');
+        }
+
+    } catch (err) {
+        console.error('Submit error', err);
+        alert('An error occurred: ' + (err.message || err));
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalText;
+    }
+});
+</script>
 </body>
 </html>
