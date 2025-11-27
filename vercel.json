@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://n8n.srv945853.hstgr.cloud/webhook-test/weekly-pdf" }
+  ]
+}
